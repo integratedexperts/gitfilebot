@@ -50,6 +50,7 @@ main(){
   ! command -v "hub" > /dev/null && echo "ERROR: Please install Hub from https://github.com/github/hub" && exit 1
 
   count=0
+  PR_URLS=()
   for i in "${REPOSITORIES[@]}";
   do
     if (( count % 3 == 0 )); then
@@ -101,6 +102,11 @@ main(){
 
     count=$(( count+1 ))
   done
+
+  if [ "${#PR_URLS[@]}" -ne 0 ]; then
+    step "Created PRs"
+    printf '%s\n' "${PR_URLS[@]}"
+  fi
 }
 
 open_pull_request(){
@@ -110,6 +116,7 @@ open_pull_request(){
   local file="${4:-}"
   local base_branch="${5:-}"
   local title
+  local url
 
   pushd "${dir}" >/dev/null || exit 1
 
@@ -128,20 +135,26 @@ open_pull_request(){
         cat "${file}"
         echo "---------------------------------------------------------------"
 
-        hub pull-request \
+        url=$(hub pull-request \
           -F "${file}" \
           -b "${base_branch}" \
           -h "${branch}"
+          )
       else
         echo "---------------------------------------------------------------"
         echo "${title}"
         echo "---------------------------------------------------------------"
 
-        hub pull-request \
+        url=$(hub pull-request \
           -m "${title}" \
           -b "${base_branch}" \
           -h "${branch}"
+          )
       fi
+
+      if [ "${url}" != "" ]; then
+        PR_URLS+=("${url}")
+       fi
     fi
 
   popd > /dev/null || exit 1

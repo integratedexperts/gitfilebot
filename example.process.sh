@@ -18,7 +18,7 @@ export NEW_BRANCH=update-docs
 
 # Pull request description file name (should not be a part of the SRC directory).
 # If file is does not exist - commit message will be used.
-export PR_FILE=example.pr.md
+export PR_FILE="$(pwd)/example.pr.md"
 
 # Do not forget to create `add` and `remove` subdirectories with your files.
 source gitfilebot.sh /absolute/path/to/src
