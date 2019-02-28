@@ -1,2 +1,6 @@
-process.sh
-pr.md
+*
+!gitfilebot.sh
+!example.process.sh
+!example.pr.md
+!.gitignore
+!README.md
